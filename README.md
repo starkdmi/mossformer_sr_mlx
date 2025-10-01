@@ -1,6 +1,6 @@
 # MossFormer2 Super Resolution (48K)
 
-Audio super-resolution model for upsampling from 16kHz to 48kHz. MLX (Python) and Swift implementations.
+Audio super-resolution model for upsampling from 16kHz to 48kHz using MLX. Python and Swift implementations.
 
 ## Usage
 
