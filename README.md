@@ -20,15 +20,18 @@ xcodebuild build -scheme generate -configuration Release -destination 'platform=
 .build/DerivedData/Build/Products/Release/generate -i input_16k.wav -o output_48k.wav
 ```
 
-## Quality
+## Performance
 
-MLX Python and Swift outputs match the original PyTorch implementation with ~1e-5 precision.
+MLX outputs match the original PyTorch implementation with ~1e-5 precision.
+
+| Framework  | Speed (× faster than input) |
+| ---------- | --------------------------- |
+| Swift MLX  | **1.61×**                   |
+| Python MLX | **4.28×**                   |
 
 ## Model
 
-Original model: [alibabasglab/MossFormer2_SR_48K](https://huggingface.co/alibabasglab/MossFormer2_SR_48K)
-
-MLX weights: [starkdmi/MossFormer2_SR_48K_MLX](https://huggingface.co/starkdmi/MossFormer2_SR_48K_MLX)
+HuggingFace: [starkdmi/MossFormer2_SR_48K_MLX](https://huggingface.co/starkdmi/MossFormer2_SR_48K_MLX) (439 MB)
 
 Source: [ClearerVoice-Studio](https://github.com/modelscope/ClearerVoice-Studio)
 
