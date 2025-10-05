@@ -9,14 +9,16 @@ Audio super-resolution model for upsampling from 16kHz to 48kHz using MLX. Pytho
 ```bash
 cd python
 pip install -r requirements.txt
-python demo.py --input input.wav --output output.wav
+python generate.py --input input_16k.wav --output output_48k.wav
 ```
-
-See [`python/demo.py`](python/demo.py) for implementation details.
 
 ### Swift
 
-See [`swift/Tests/Demo.swift`](swift/Tests/Demo.swift) for implementation details.
+```bash
+cd swift
+xcodebuild build -scheme generate -configuration Release -destination 'platform=macOS' -derivedDataPath .build/DerivedData -quiet
+.build/DerivedData/Build/Products/Release/generate -i input_16k.wav -o output_48k.wav
+```
 
 ## Quality
 
