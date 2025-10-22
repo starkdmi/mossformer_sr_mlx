@@ -1,9 +1,63 @@
 import MLX
 import MLXNN
 
+/// Drop-in replacement for MLXNN.Conv1d that reuses the optimized depthwise kernel.
+public final class Conv1dFast: Module {
+    public let inputChannels: Int
+    public let outputChannels: Int
+    public let kernelSize: Int
+    public let stride: Int
+    public let padding: Int
+    public let groups: Int
+    public let hasBias: Bool
+
+    @ModuleInfo public var weight: MLXArray
+    @ModuleInfo public var bias: MLXArray?
+
+    public init(
+        inputChannels: Int,
+        outputChannels: Int,
+        kernelSize: Int,
+        stride: Int = 1,
+        padding: Int = 0,
+        groups: Int = 1,
+        bias: Bool = true
+    ) {
+        self.inputChannels = inputChannels
+        self.outputChannels = outputChannels
+        self.kernelSize = kernelSize
+        self.stride = stride
+        self.padding = padding
+        self.groups = groups
+        self.hasBias = bias
+
+        // Same layout MLX.Conv1d expects: (O, K, I_per_group)
+        self.weight = MLXArray.zeros([outputChannels, kernelSize, inputChannels / groups])
+        if bias {
+            self.bias = MLXArray.zeros([outputChannels])
+        }
+
+        super.init()
+    }
+
+    public func callAsFunction(_ x: MLXArray) -> MLXArray {
+        var out = DepthwiseConv1dKernel.apply(
+            x,
+            weight: weight,
+            stride: stride,
+            padding: padding,
+            groups: groups
+        )
+        if let bias {
+            out = out + bias
+        }
+        return out
+    }
+}
+
 /// Depthwise 1D convolution
 public class DepthwiseConv1d: Module {
-    @ModuleInfo var conv: Conv1d
+    @ModuleInfo var conv: Conv1dFast // Conv1d
     
     public init(
         inChannels: Int,
@@ -15,7 +69,7 @@ public class DepthwiseConv1d: Module {
     ) {
         precondition(outChannels % inChannels == 0, "out_channels should be constant multiple of in_channels")
         
-        self.conv = Conv1d(
+        self.conv = Conv1dFast( // Conv1d
             inputChannels: inChannels,
             outputChannels: outChannels,
             kernelSize: kernelSize,

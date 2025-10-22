@@ -26,7 +26,7 @@ MLX outputs match the original PyTorch implementation with ~1e-5 precision.
 
 | Framework  | Speed (× faster than input) |
 | ---------- | --------------------------- |
-| Swift MLX  | **1.61×**                   |
+| Swift MLX  | **2.68×**                   |
 | Python MLX | **4.28×**                   |
 
 ## Model
